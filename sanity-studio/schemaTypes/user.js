@@ -37,7 +37,7 @@ export default {
     }, 
     {
       title:'Followers',
-      name: 'Followers',
+      name: 'followers',
       type: 'array',
       of: [
         {
