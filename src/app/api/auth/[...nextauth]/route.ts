@@ -10,12 +10,13 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async session({ session }) {
+    async session({ session, token }) {
       const user = session?.user;
       if (user) {
         session.user = {
           ...user,
           username: user?.email?.split('@')[0] || '',
+          id: token.id as string,
         };
       }
       return session;
@@ -31,6 +32,12 @@ export const authOptions: NextAuthOptions = {
         image: image,
       });
       return true;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
     },
   },
   pages: {

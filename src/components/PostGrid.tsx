@@ -1,30 +1,20 @@
 'use client';
+import usePosts from '@/hooks/posts';
 import { SimplePost } from '@/model/post';
 import { signIn, useSession } from 'next-auth/react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import useSWR from 'swr';
-import DetailPost from './DetailPost';
+import PostDetail from './PostDetail';
+import PostGridCard from './PostGridCard';
 import PostModal from './PostModal';
 import ClipSpinner from './ui/ClipSpinner';
 import ModalPortal from './ui/ModalPortal';
-import { Tab } from './UserPosts';
-type Props = {
-  username: string;
-  query: Tab;
-};
 
-export default function PostGrid({ username, query }: Props) {
-  const router = useRouter();
+export default function PostGrid() {
   const { data: session } = useSession();
   const [selected, setSelected] = useState<SimplePost | null>(null);
 
-  const {
-    data: posts,
-    isLoading: loading,
-    error,
-  } = useSWR<SimplePost[]>(`/api/users/${username}/${query}`);
+  const { posts, isLoading } = usePosts();
 
   const handleOpenPost = (post: SimplePost) => {
     if (!session?.user) signIn();
@@ -33,7 +23,7 @@ export default function PostGrid({ username, query }: Props) {
 
   return (
     <>
-      {loading ? (
+      {isLoading ? (
         <div className='text-center'>
           <ClipSpinner />
         </div>
@@ -42,15 +32,8 @@ export default function PostGrid({ username, query }: Props) {
           {posts?.length ? (
             <ul className='w-full flex-wrap grid sm:grid-cols-2 md:grid-cols-3 gap-3 px-5'>
               {posts.map((post, index) => (
-                <li key={post.id} onClick={() => handleOpenPost(post)}>
-                  <Image
-                    className='w-full aspect-square object-cover'
-                    src={post.image}
-                    alt={`image_${post.id}`}
-                    width={200}
-                    height={200}
-                    priority={index < 6}
-                  />
+                <li key={post.id}>
+                  <PostGridCard post={post} priority={index < 6} />
                 </li>
               ))}
             </ul>
@@ -63,7 +46,7 @@ export default function PostGrid({ username, query }: Props) {
       {selected && (
         <ModalPortal>
           <PostModal onClose={() => setSelected(null)}>
-            <DetailPost post={selected} />
+            <PostDetail post={selected} />
           </PostModal>
         </ModalPortal>
       )}

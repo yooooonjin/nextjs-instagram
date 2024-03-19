@@ -1,5 +1,5 @@
 'use client';
-import useDebounce from '@/hooks/useDebounce';
+import useDebounce from '@/hooks/debounce';
 import { SearchUser } from '@/model/user';
 import React, { useState } from 'react';
 import useSWR from 'swr';

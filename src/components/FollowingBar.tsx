@@ -2,17 +2,16 @@
 import Link from 'next/link';
 import Avatar from './Avatar';
 import FollowingCarousel from './FollowingCarousel ';
-import useSWR from 'swr';
 import { BeatLoader } from 'react-spinners';
-import { HomeUser } from '@/model/user';
+import useMe from '@/hooks/me';
 
 export default function FollowingBar() {
-  const { data, error, isLoading: loading } = useSWR<HomeUser>('/api/me');
-  const users = data?.following;
+  const { user, isLoading } = useMe();
+  const users = user?.following;
 
   return (
-    <section className='bg-white w-full mt-3 shadow-sm py-3 min-h-[90px] text-center relative x-0'>
-      {loading ? (
+    <section className='bg-white w-full mb-3 shadow-sm py-3 min-h-[90px] text-center relative x-0'>
+      {isLoading ? (
         <BeatLoader color='black' size='8px' />
       ) : (
         (!users || users.length === 0) && <p>{`You dont't have following`}</p>

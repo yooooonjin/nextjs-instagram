@@ -9,10 +9,7 @@ type Props = {
   user: ProfileUser;
 };
 
-export default function UserProfile(props: Props) {
-  const { data: session } = useSession();
-
-  const [user, setUser] = useState<ProfileUser>(props.user);
+export default function UserProfile({ user }: Props) {
   const { name, username, image, followers, following, posts } = user;
 
   const info = [
@@ -20,27 +17,6 @@ export default function UserProfile(props: Props) {
     { title: 'followers', data: followers },
     { title: 'following', data: following },
   ];
-
-  const isFollowing = true;
-  //   session?.user.username &&
-  //   -1 < user.followers.indexOf(session.user.username);
-
-  // const onClick = () => {
-  //   const auth = session?.user.username;
-  //   if (!auth) return;
-
-  //   if (isFollowing) {
-  //     setUser((prev) => ({
-  //       ...prev,
-  //       followers: followers.filter((e) => e !== auth),
-  //     }));
-  //   } else {
-  //     setUser((prev) => ({
-  //       ...prev,
-  //       followers: [...prev.followers, auth],
-  //     }));
-  //   }
-  // };
 
   return (
     <section className='flex flex-col md:flex-row justify-center items-center py-10'>
@@ -50,9 +26,7 @@ export default function UserProfile(props: Props) {
       <div>
         <div className='flex flex-col md:flex-row  items-center mb-2'>
           <h1 className='text-lg font-medium md:mr-7'>{username}</h1>
-          {session?.user && session.user.username !== username && (
-            <FollowButton user={user} />
-          )}
+          <FollowButton user={user} />
         </div>
         <ul className='flex gap-3 text-sm mb-3'>
           {info.map(({ title, data }) => (
