@@ -32,7 +32,7 @@ export default function NavBar() {
 
   return (
     <nav className='flex justify-between '>
-      <Link href='/'>
+      <Link href='/' aria-label='home'>
         <h1 className='font-bold text-xl'>Instagram</h1>
       </Link>
       <div>
